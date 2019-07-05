@@ -2,7 +2,7 @@
 
 # ----------------------
 # KUDU Deployment Script
-# Version: 1.0.17
+# Version: 0.2.2
 # ----------------------
 
 # Helpers
@@ -64,19 +64,6 @@ if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
   fi
 fi
 
-# PHP Helpers
-# -----------
-
-initializeDeploymentConfig() {
-	if [ ! -e "$COMPOSER_ARGS" ]; then
-    COMPOSER_ARGS="--no-interaction --prefer-dist --optimize-autoloader --no-progress --no-dev --verbose"
-    echo "No COMPOSER_ARGS variable declared in App Settings, using the default settings"
-  else
-    echo "Using COMPOSER_ARGS variable declared in App Setting"
-  fi
-  echo "Composer settings: $COMPOSER_ARGS"
-}
-
 # Node Helpers
 # ------------
 
@@ -111,7 +98,7 @@ selectNodeVersion () {
 # Deployment
 # ----------
 
-echo PHP deployment
+echo Handling node.js deployment.
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
@@ -126,22 +113,34 @@ selectNodeVersion
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
   eval $NPM_CMD install --production
-  eval $NPM_CMD run production
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
 
-# 3. Initialize Composer Config
-initializeDeploymentConfig
-
-# 4. Use composer
-echo "$DEPLOYMENT_TARGET"
-if [ -e "$DEPLOYMENT_TARGET/composer.json" ]; then
-  echo "Found composer.json"
-  pushd "$DEPLOYMENT_TARGET"
-  php composer.phar install $COMPOSER_ARGS
-  exitWithMessageOnError "Composer install failed"
-  popd
+# 4. Install Bower modules
+if [ -e "$DEPLOYMENT_TARGET/bower.json" ]; then
+  cd "$DEPLOYMENT_TARGET"
+  eval ./node_modules/.bin/bower install
+  exitWithMessageOnError "bower failed"
+  cd - > /dev/null
 fi
+
+# 5. Install Composer modules 
+if [ -e "$DEPLOYMENT_TARGET/composer.json" ]; then
+  cd "$DEPLOYMENT_TARGET"
+  eval php composer.phar install
+  exitWithMessageOnError "composer failed"
+  cd - > /dev/null
+fi
+
 ##################################################################################################################################
+
+# Post deployment stub
+if [[ -n "$POST_DEPLOYMENT_ACTION" ]]; then
+  POST_DEPLOYMENT_ACTION=${POST_DEPLOYMENT_ACTION//\"}
+  cd "${POST_DEPLOYMENT_ACTION_DIR%\\*}"
+  "$POST_DEPLOYMENT_ACTION"
+  exitWithMessageOnError "post deployment action failed"
+fi
+
 echo "Finished successfully."
