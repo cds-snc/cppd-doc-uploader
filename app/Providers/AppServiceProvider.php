@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(env('REDIRECT_HTTPS'))
+        if(env('APP_ENV') == 'production')
         {
             $url->forceSchema('https');
         }
