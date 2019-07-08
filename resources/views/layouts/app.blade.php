@@ -41,7 +41,7 @@
     <main id="wb-cont" role="main" property="mainContentOfPage" class="container">
       
         <div id="app">
-        @yield('content')
+          @yield('content')
         </div>
       <div id="def-preFooter"></div>
     </main>
