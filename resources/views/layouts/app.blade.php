@@ -10,7 +10,7 @@
 
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>File Uploader</title>
-    <script src="{{ asset('helper/startswith.js') }}" type="text/javascript"></script>
+    
     <!--  CDTS implementation -->
     <script type="text/javascript" src="https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_30/cdts/compiled/soyutils.js"></script>
     <script type="text/javascript" src="https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_30/cdts/compiled/wet-en.js"></script>
@@ -31,7 +31,6 @@
       }));
     </script>
 
-    <script type="text/javascript" src="{{ asset('helper/wet.js') }}"></script>
   </head>
   <body>
     <div id="def-top"></div>
