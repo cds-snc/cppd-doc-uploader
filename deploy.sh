@@ -2,7 +2,7 @@
 
 # ----------------------
 # KUDU Deployment Script
-# Version: 0.2.2
+# Version: 1.0.17
 # ----------------------
 
 # Helpers
@@ -64,6 +64,19 @@ if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
   fi
 fi
 
+# PHP Helpers
+# -----------
+
+initializeDeploymentConfig() {
+	if [ ! -e "$COMPOSER_ARGS" ]; then
+    COMPOSER_ARGS="--no-interaction --prefer-dist --optimize-autoloader --no-progress --no-dev --verbose"
+    echo "No COMPOSER_ARGS variable declared in App Settings, using the default settings"
+  else
+    echo "Using COMPOSER_ARGS variable declared in App Setting"
+  fi
+  echo "Composer settings: $COMPOSER_ARGS"
+}
+
 ##################################################################################################################################
 # Deployment
 # ----------
@@ -89,13 +102,4 @@ if [ -e "$DEPLOYMENT_TARGET/composer.json" ]; then
   popd
 fi
 ##################################################################################################################################
-
-# Post deployment stub
-if [[ -n "$POST_DEPLOYMENT_ACTION" ]]; then
-  POST_DEPLOYMENT_ACTION=${POST_DEPLOYMENT_ACTION//\"}
-  cd "${POST_DEPLOYMENT_ACTION_DIR%\\*}"
-  "$POST_DEPLOYMENT_ACTION"
-  exitWithMessageOnError "post deployment action failed"
-fi
-
 echo "Finished successfully."
