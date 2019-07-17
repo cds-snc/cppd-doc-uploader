@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>Securely upload supporting documents</h1>
+        <h1>Securely upload documents that support your application</h1>
 
         <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
         <div class="dropbox">
