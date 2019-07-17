@@ -35,7 +35,7 @@
       </div>
       <!--FAILED-->
       <div v-if="isFailed">
-        <h2>Uploaded failed.</h2>
+        <h2>Upload failed.</h2>
         <p>
           <a href="javascript:void(0)" @click="reset()">Try again</a>
         </p>
@@ -91,7 +91,7 @@
                         this.currentStatus = STATUS_SUCCESS;
                     })
                     .catch(err => {
-                        this.uploadError = err.response.data.message;
+                        this.uploadError = err.response.data.errors.document[0];
                         this.currentStatus = STATUS_FAILED;
                     });
             },
