@@ -20,7 +20,7 @@ Route::get('/', function () {
 Route::post('/upload', function() {
 
     request()->validate([
-        'document' => 'required|mimes:pdf,max:10000'
+        'document' => 'required|mimetypes:application/pdf,max:10000'
     ]);
 
     if (request()->hasFile('document')) {
