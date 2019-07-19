@@ -50,18 +50,19 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function()
     });
 
     Route::get('/files', function () {
-        $files = Storage::disk('uploads')->files();
-        $data = [];
-
-        foreach ($files as $file) {
-            array_push($data, [
+        $files = collect(Storage::disk('uploads')->files());
+        
+        $data = $files->map(function ($file, $key) {
+            return [
                 'name' => $file,
                 'url' => '/files/' . $file,
                 'date' => Carbon::createFromTimestamp(Storage::disk('uploads')->lastModified($file))->toDateTimeString()
-            ]);
-        }
+            ];
+        });
 
-        return view('files', ['files' => $data]);
+        $sorted = $data->sortBy('date')->values();
+
+        return view('files', ['files' => $sorted]);
     });
 
     Route::get('/files/{file}', function($file) {
