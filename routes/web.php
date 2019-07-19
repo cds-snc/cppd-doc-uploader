@@ -52,7 +52,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function()
     Route::get('/files', function () {
         $files = collect(Storage::disk('uploads')->files());
         
-        $data = $files->map(function ($file, $key) {
+        $files->transform(function ($file, $key) {
             return [
                 'name' => $file,
                 'url' => '/files/' . $file,
@@ -60,7 +60,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function()
             ];
         });
 
-        $sorted = $data->sortBy('date')->values();
+        $sorted = $files->sortBy('date')->values();
 
         return view('files', ['files' => $sorted]);
     });
