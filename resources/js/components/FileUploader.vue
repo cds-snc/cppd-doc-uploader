@@ -24,7 +24,7 @@
         <h2>Uploaded {{ uploadedFiles.length }} file(s) successfully.</h2>
 
         <ul class="list-unstyled">
-          <li v-for="item in uploadedFiles">
+          <li v-for="(item, index) in uploadedFiles" v-bind:key="index">
             {{ item.originalName }}
           </li>
         </ul>

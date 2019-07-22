@@ -9,8 +9,8 @@
                 <th>Uploaded</th>
                 <th></th>
             </tr>
-            <tr v-for="(file, key) in uploaded_files">
-                <td>{{ key+1 }}</td>
+            <tr v-for="(file, index) in uploaded_files" v-bind:key="index">
+                <td>{{ index+1 }}</td>
                 <td>{{ file.name }}</td>
                 <td>{{ file.date }}</td>
                 <td class="text-right">
